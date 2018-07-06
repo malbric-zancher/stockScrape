@@ -15,8 +15,8 @@ def sendEmail(emailText):
 	s.quit()
 
 # usage information and basic arguments check	
-if len(sys.argv) < 3:
-	print('usage: script [ticker] [target_price]\nscript opl 6.00')
+if len(sys.argv) < 4:
+	print('usage: script [ticker] [target_price] [operator]\nscript opl 6.00 ">"')
 	sys.exit(0)
 
 url = 'https://stooq.pl/q/g/?s=' + sys.argv[1]
@@ -53,12 +53,27 @@ cleanPrice = str(rawTag).strip('<b> </')
 floatPrice = float(cleanPrice)
 
 # basic price compare
-if floatPrice > targetPrice:
-	priceText = '''Current price: %s
+if sys.argv[3] == ">":
+	if floatPrice > targetPrice:
+		priceText = '''Current price: %s
 Target price: %s
 Researched url: %s
-''' % (floatPrice, targetPrice, url)
-	sendEmail(priceText)
+	''' % (floatPrice, targetPrice, url)
+		sendEmail(priceText)
+	
+	else:
+		pass
+
+elif sys.argv[3] == "<":
+	if floatPrice < targetPrice:
+		priceText = '''Current price: %s
+Target price: %s
+Researched url: %s
+	''' % (floatPrice, targetPrice, url)
+		sendEmail(priceText)
+	
+	else:
+		pass
 
 else:
-	pass
+	sys.exit(1)		
